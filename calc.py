@@ -1,26 +1,34 @@
-# 87244432
-stack = []
-operators = ["+", "-", "*", "/"]
+# 87261450
+class Stack:
+    def __init__(self):
+        self.stack = []
+        
+    def push(self, value):
+        self.stack.append(value)
 
-# Чтение входных данных
-expression = input().split()
+    def pop(self):
+        return self.stack.pop()
 
-# Обработка входной строки
-for value in expression:
-    if value not in operators:
-        stack.append(int(value))
-    else:
-        op2 = stack.pop()
-        op1 = stack.pop()
-        if value == "+":
-            result = op1 + op2
-        elif value == "-":
-            result = op1 - op2
-        elif value == "*":
-            result = op1 * op2
-        elif value == "/":
-            result = op1 // op2  # целочисленное деление
-        stack.append(result)
+    def evaluate(self, expression):
+        stack = []
+        operators = {
+            "+": lambda a, b: a + b,
+            "-": lambda a, b: a - b,
+            "*": lambda a, b: a * b,
+            "/": lambda a, b: a // b,
+        }
+        for value in expression:
+            if value not in operators:
+                stack.append(int(value))
+            else:
+                op2 = stack.pop()
+                op1 = stack.pop()
+                result = operators[value](op1, op2)
+                stack.append(result)
+        return stack[-1]
 
-# Вывод результата
-print(stack.pop())
+
+if __name__ == '__main__':
+    stack = Stack()
+    expression = input().split()
+    print(stack.evaluate(expression))
