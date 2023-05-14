@@ -1,34 +1,37 @@
-# 87261450
+# 87284129	
+# вообще все пришлось переделывать, все ломается и не проходит тесты
+class CustomNoItemsException(Exception):
+    def __init__(self):
+        pass
+
 class Stack:
     def __init__(self):
-        self.stack = []
+        self.__data=[]
         
-    def push(self, value):
-        self.stack.append(value)
-
+    def push(self,element):
+        self.__data.append(element)
+    
     def pop(self):
-        return self.stack.pop()
+        if len(self.__data)==0:
+            raise CustomNoItemsException
+        else:
+            return self.__data.pop()
 
-    def evaluate(self, expression):
-        stack = []
-        operators = {
-            "+": lambda a, b: a + b,
-            "-": lambda a, b: a - b,
-            "*": lambda a, b: a * b,
-            "/": lambda a, b: a // b,
-        }
-        for value in expression:
-            if value not in operators:
-                stack.append(int(value))
-            else:
-                op2 = stack.pop()
-                op1 = stack.pop()
-                result = operators[value](op1, op2)
-                stack.append(result)
-        return stack[-1]
-
+def calculate(input_string):
+    dictionary={
+    '+':lambda x,y:x+y,
+    '-':lambda x,y:y-x,
+    '*':lambda x,y:x*y,
+    '/':lambda x,y:y//x
+    }
+    operands = Stack()
+    for val in input_string.split(' '):
+        try:
+            operands.push(int(val))
+        except ValueError:
+            operands.push(dictionary[val](operands.pop(),operands.pop()))
+    
+    return operands.pop()
 
 if __name__ == '__main__':
-    stack = Stack()
-    expression = input().split()
-    print(stack.evaluate(expression))
+    print(calculate(input()))
